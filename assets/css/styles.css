@@ -513,7 +513,7 @@ footer .logo path {
 }
 
 footer .users.row {
-  background-image: url(/assets/images/footer.png);
+  background-image: url(/FFTK/assets/images/footer.png);
   background-position-y: 45px;
   background-repeat: no-repeat;
   color: #494c59;
@@ -600,7 +600,7 @@ body.home .arrow .shaft {
   width: 10em;
 }
 #users-container a {
-  background-image: url('/assets/images/users.png');
+  background-image: url('/FFTK/assets/images/users.png');
   background-size: 100%;
   display: block;
   height: 100px;

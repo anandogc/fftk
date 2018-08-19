@@ -9,7 +9,7 @@
     <title>{{ page.title }} - Quill Rich Text Editor</title>
     {% endif %}
     {% include meta.html %}
-    <link rel="stylesheet" href="/assets/css/base.css">
+    <link rel="stylesheet" href="/FFTK/assets/css/base.css">
     {% assign sections = content | split: '<!-- head -->' %}
     {% for section in sections %}
       {% assign mod = forloop.index | modulo: 2 %}
@@ -17,7 +17,7 @@
         {{ section | strip }}
       {% endif %}
     {% endfor %}
-    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="/FFTK/assets/css/styles.css">
     {% include analytics.html  %}
   </head>
   <body{% if page.bodyClass != null %} class="{{ page.bodyClass }}"{% endif %}>
