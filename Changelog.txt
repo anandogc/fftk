@@ -1,0 +1,8 @@
+
+v1.1:
+	'docs' folder added.
+	FFZ test case added.
+	FFZ implemented. FFZ -> C2C in all three directions
+	Communicate using MPI_Vectors
+	Files are splitted.
+	2D FFT bug removed

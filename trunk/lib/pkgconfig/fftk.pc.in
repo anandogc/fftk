@@ -1,0 +1,9 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: FFTK
+Description: fast Fourier transform Kanpur
+Version: @VERSION@
+Libs: -L${libdir} -lfftk@LIB_SUFFIX@
+Cflags: -I${includedir}
