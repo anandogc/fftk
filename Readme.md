@@ -59,4 +59,4 @@ where cols = numprocs/rows.
 
 License
 ----
-GPL
+BSD-3
