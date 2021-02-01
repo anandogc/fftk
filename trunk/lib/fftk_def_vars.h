@@ -42,18 +42,14 @@
  */
 
 #include <mpi.h>
-#include <complex>
-#include <fftw3.h>
-
 #include <blitz/array.h>
+#include "adapter/FFTW_Adapter_def_vars.h"
+#include "global.h"
+#include "utilities.h"
 
-#ifdef FFTK_THREADS
-	#include <omp.h>
-#endif
 
-
-using namespace std;
-using namespace blitz;
+#include <functional>
+#include <memory>
 
 
 #ifndef _FFTK_DEF_VARS_H
@@ -62,87 +58,20 @@ using namespace blitz;
 
 // Defining REAL_DOUBLE: switch for setting double
 #if defined(REAL_DOUBLE)
-
-
-#define Real                            double
 #define MPI_Real                        MPI_DOUBLE
-#define FFTW_Complex                    fftw_complex
 
-#define FFTW_MPI_INIT                   fftw_mpi_init
-
-#define FFTW_PLAN                       fftw_plan
-#define FFTW_MPI_PLAN_DFT_3D            fftw_mpi_plan_dft_3d   // for GP
-#define FFTW_MPI_PLAN_DFT_R2C_2D        fftw_mpi_plan_dft_r2c_2d
-#define FFTW_MPI_PLAN_DFT_C2R_2D        fftw_mpi_plan_dft_c2r_2d
-#define FFTW_MPI_PLAN_DFT_R2C_3D        fftw_mpi_plan_dft_r2c_3d
-#define FFTW_MPI_PLAN_DFT_C2R_3D        fftw_mpi_plan_dft_c2r_3d
-#define FFTW_PLAN_MANY_R2R              fftw_plan_many_r2r
-#define FFTW_PLAN_MANY_DFT              fftw_plan_many_dft
-#define FFTW_PLAN_MANY_DFT_R2C          fftw_plan_many_dft_r2c
-#define FFTW_PLAN_MANY_DFT_C2R          fftw_plan_many_dft_c2r
-
-#define FFTW_EXECUTE                    fftw_execute
-#define FFTW_EXECUTE_R2R                fftw_execute_r2r
-#define FFTW_EXECUTE_DFT                fftw_execute_dft
-#define FFTW_EXECUTE_DFT_R2C            fftw_execute_dft_r2c
-#define FFTW_EXECUTE_DFT_C2R            fftw_execute_dft_c2r
-#define FFTW_MPI_EXECUTE_DFT            fftw_mpi_execute_dft
-#define FFTW_MPI_EXECUTE_DFT_R2C        fftw_mpi_execute_dft_r2c        
-#define FFTW_MPI_EXECUTE_DFT_C2R        fftw_mpi_execute_dft_c2r  
-#define FFTW_DESTROY_PLAN               fftw_destroy_plan
-
-
-// Define REAL_FLOAT: switch for setting float
 #elif defined(REAL_FLOAT)
-
-#define Real                            float
+// Define REAL_FLOAT: switch for setting float
 #define MPI_Real                        MPI_FLOAT
-#define FFTW_Complex                    fftwf_complex
 
-#define FFTW_MPI_INIT                   fftwf_mpi_init
-
-#define FFTW_PLAN                       fftwf_plan
-#define FFTW_MPI_PLAN_DFT_3D            fftwf_mpi_plan_dft_3d   // for GP
-#define FFTW_MPI_PLAN_DFT_R2C_2D        fftwf_mpi_plan_dft_r2c_2d
-#define FFTW_MPI_PLAN_DFT_C2R_2D        fftwf_mpi_plan_dft_c2r_2d
-#define FFTW_MPI_PLAN_DFT_R2C_3D        fftwf_mpi_plan_dft_r2c_3d
-#define FFTW_MPI_PLAN_DFT_C2R_3D        fftwf_mpi_plan_dft_c2r_3d
-#define FFTW_PLAN_MANY_R2R              fftwf_plan_many_r2r
-#define FFTW_PLAN_MANY_DFT              fftwf_plan_many_dft
-#define FFTW_PLAN_MANY_DFT_R2C          fftwf_plan_many_dft_r2c
-#define FFTW_PLAN_MANY_DFT_C2R          fftwf_plan_many_dft_c2r
-
-#define FFTW_EXECUTE                    fftwf_execute
-#define FFTW_EXECUTE_R2R                fftwf_execute_r2r
-#define FFTW_EXECUTE_DFT                fftwf_execute_dft
-#define FFTW_EXECUTE_DFT_R2C            fftwf_execute_dft_r2c
-#define FFTW_EXECUTE_DFT_C2R            fftwf_execute_dft_c2r
-#define FFTW_MPI_EXECUTE_DFT            fftwf_mpi_execute_dft
-#define FFTW_MPI_EXECUTE_DFT_R2C        fftwf_mpi_execute_dft_r2c        
-#define FFTW_MPI_EXECUTE_DFT_C2R        fftwf_mpi_execute_dft_c2r        
-#define FFTW_DESTROY_PLAN               fftwf_destroy_plan
 
 #endif
-
-
+/*
 #ifndef Complex
 #define Complex  complex<Real>
 #endif
-
+*/
 // Switches for FFTW plans 
-
-#if defined(ESTIMATE)
-#define FFTW_PLAN_FLAG FFTW_ESTIMATE
-
-#elif defined(MEASURE)
-#define FFTW_PLAN_FLAG FFTW_MEASURE
-
-#elif defined(PATIENT)
-#define FFTW_PLAN_FLAG FFTW_PATIENT
-
-#elif defined(EXHAUSTIVE)
-#define FFTW_PLAN_FLAG FFTW_EXHAUSTIVE
-#endif
 
 
 #define IN_ALL_PROCS(l, expr) \
@@ -151,5 +80,14 @@ for (int l=0; l<numprocs; l++) { \
         {expr;}\
     MPI_Barrier(MPI_COMM_WORLD);\
 }
+
+
+#ifdef TIMERS
+    #define TIMER_START(n) global->misc.timer[n] -= MPI_Wtime()
+    #define TIMER_END(n) global->misc.timer[n] += MPI_Wtime()
+#else
+    #define TIMER_START(n) 
+    #define TIMER_END(n)
+#endif
 
 #endif

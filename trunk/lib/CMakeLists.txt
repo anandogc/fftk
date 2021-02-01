@@ -25,11 +25,19 @@
 #
 
 ADD_LIBRARY(fftk${LIB_SUFFIX}
-	initialise.cc
-	transform.cc
-	communicate.cc
+	communication.cc
+	basis/FFF.cc
+	basis/SSS.cc
+	basis/SFF.cc
+	basis/SSF.cc
+	basis/FFZ.cc
+	adapter/FFTW_Adapter.cc
+	fftk.cc
+#	initialise.cc
+#	transform.cc
+#	communicate.cc
 	utilities.cc
-	finalise.cc
+#	finalise.cc
 )
 
 
