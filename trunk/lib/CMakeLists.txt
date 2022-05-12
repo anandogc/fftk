@@ -47,8 +47,23 @@ INSTALL(TARGETS fftk${LIB_SUFFIX}
         PRIVATE_HEADER DESTINATION include)
 
 INSTALL(FILES fftk.h
+	      communication.h
+	      fftk_def_vars.h
+	      global.h
+	      utilities.h
         DESTINATION include)
 
+
+INSTALL(FILES adapter/FFTW_Adapter.h
+	      adapter/FFTW_Adapter_def_vars.h
+	DESTINATION include/adapter)
+
+INSTALL(FILES basis/FFF.h
+	      basis/FFZ.h
+	      basis/SFF.h
+	      basis/SSF.h
+	      basis/SSS.h
+	DESTINATION include/basis)
 
 configure_file("pkgconfig/fftk.pc.in" "pkgconfig/fftk${LIB_SUFFIX}.pc" @ONLY)
 install(FILES ${PROJECT_BINARY_DIR}/lib/pkgconfig/fftk${LIB_SUFFIX}.pc

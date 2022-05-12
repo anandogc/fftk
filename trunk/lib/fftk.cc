@@ -96,5 +96,64 @@ namespace FFTK {
         };
     }
 
+    MPI_Comm FFTK::Get_communicator(string which) {
+        if (which=="ROW")
+            return global->mpi.MPI_COMM_ROW;
+        else if (which=="COL")
+            return global->mpi.MPI_COMM_COL;
+        else {
+            if (global->mpi.my_id==0)
+                cerr << "Invalid communicator: " << which << endl;
+            MPI_Finalize();
+            MPI_Abort(MPI_COMM_WORLD, 0);
+        }
+    }
+
+
+    TinyVector<int,3> FFTK::Get_FA_shape()
+    {
+        return global->field.FA_shape;
+    }
+    TinyVector<int,3> FFTK::Get_IA_shape()
+    {
+        return global->field.IA_shape;
+    }
+    TinyVector<int,3> FFTK::Get_RA_shape()
+    {
+        return global->field.RA_shape;
+    }
+
+    TinyVector<int,3> FFTK::Get_FA_start()
+    {
+        return TinyVector<int, 3>(global->field.fx_start,global->field.fy_start,global->field.fz_start);
+    }
+    TinyVector<int,3> FFTK::Get_IA_start()
+    {
+        return TinyVector<int, 3>(global->field.ix_start,global->field.iy_start,global->field.iz_start);
+    }
+    TinyVector<int,3> FFTK::Get_RA_start()
+    {
+        return TinyVector<int, 3>(global->field.rx_start,global->field.ry_start,global->field.rz_start);
+    }
+
+    int FFTK::Get_row_id()
+    {
+        return global->mpi.my_row_id;
+    }
+    int FFTK::Get_col_id()
+    {
+        return global->mpi.my_col_id;
+    }
+
+    int FFTK::Get_num_p_rows()
+    {
+        return global->mpi.num_p_rows;
+    }
+    int FFTK::Get_num_p_cols()
+    {
+        return global->mpi.num_p_cols;
+    }
+
+
        
 }
